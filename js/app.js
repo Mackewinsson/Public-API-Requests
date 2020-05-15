@@ -9,6 +9,48 @@ function logError(text){
     return console.log(`%c ${log}`,'color: red; font-weight: bold; font-size: 18px;');
 };
 
+// function to create and display modal
+
+function createModal(id, array){
+    const usersArray = array;
+    const firstName = usersArray[id].firstName;
+    const lastName = usersArray[id].lastName;
+    const email = usersArray[id].email;
+    const city = usersArray[id].city;
+    const state = usersArray[id].state;
+    const image = usersArray[id].image;
+    const phone = usersArray[id].phone;
+    const street = usersArray[id].street;
+    const streetNumber = usersArray[id].streetNumber;
+    const birthday = usersArray[id].birthday;
+
+    const modalContainer = document.createElement('div');
+    modalContainer.className = 'modal-container';
+    modalContainer.innerHTML = 
+    `
+    <div class="modal">
+    <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+    <div class="modal-info-container">
+        <img class="modal-img" src="${image}" alt="profile picture">
+        <h3 id="name" class="modal-name cap">${firstName} ${lastName}</h3>
+        <p class="modal-text">${email}</p>
+        <p class="modal-text cap">${city}</p>
+        <hr>
+        <p class="modal-text">${phone}</p>
+        <p class="modal-text">${street}, ${state} ${streetNumber}</p>
+        <p class="modal-text">Birthday: ${birthday}</p>
+    </div>
+    `;
+    gallery.appendChild(modalContainer);
+};
+
+function deleteModal(){
+
+    const modalContainer = document.querySelector('.modal-container');
+    modalContainer.remove();
+
+};
+
 //function to fetch api with try and catch
 
 async function fetchApi(url){
@@ -28,6 +70,8 @@ async function fetchApi(url){
 
   };
   
+  const gallery = document.querySelector('div#gallery');
+  
   (async function(){
 
     const userNumber = 12;
@@ -46,7 +90,11 @@ async function fetchApi(url){
             lastName: element.name.last,
             email: element.email,
             city: element.location.city,
-            state: element.location.state
+            state: element.location.state,
+            phone: element.cell,
+            street: element.location.street.name,
+            streetNumber: element.location.street.number,
+            birthday: element.dob.date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)(.*)/g, '$3/$2/$1')
 
         };
         
@@ -55,11 +103,10 @@ async function fetchApi(url){
     console.table(users);
 
     // Gallery markup: 
-    const gallery = document.querySelector('div#gallery');
 
 
+    let idCounter = 0;
     await users.forEach(element => {
-        
         const firstName = element.firstName;
         const lastName = element.lastName;
         const email = element.email;
@@ -68,7 +115,8 @@ async function fetchApi(url){
         const image = element.image;
         //creating and apending elements element
         let card = document.createElement('div');
-        card.className = 'card'
+        card.className = 'card';
+        card.id = idCounter;
         gallery.appendChild(card);
         card.innerHTML= 
         `<div class="card-img-container">
@@ -79,14 +127,30 @@ async function fetchApi(url){
             <p class="card-text">${email}</p>
             <p class="card-text cap">${city}, ${state}</p>
         </div>`;
+        idCounter++
     });
 
-    gallery.addEventListener('click', () =>{
+    gallery.addEventListener('click', (e) =>{
+        if(e.target.id !== 'gallery'){
 
-        
-
-
+            if(e.target.className === 'card'){
+                const card = e.target;
+                createModal(card.id, users);
+            } else if(e.target.className !== 'card'){
+               if(e.target.parentElement.className === 'card'){
+                    const card = e.target.parentElement;
+                    createModal(card.id, users);
+               }else if(e.target.parentElement.parentElement.className === 'card'){
+                    const card = e.target.parentElement.parentElement;
+                    createModal(card.id, users);
+               }else if(e.target.tagName === 'BUTTON' || e.target.tagName === 'STRONG'){
+                   deleteModal();
+               };
+            };
+        };
     });
 
 })();
+
+
 
