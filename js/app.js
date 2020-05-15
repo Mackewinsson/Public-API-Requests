@@ -41,7 +41,7 @@ async function fetchApi(url){
         
        return {
 
-           image: element.picture.thumbnail,
+           image: element.picture.medium,
            firstName: element.name.first,
             lastName: element.name.last,
             email: element.email,
@@ -53,50 +53,40 @@ async function fetchApi(url){
     });
     log('Users array created');
     console.table(users);
+
     // Gallery markup: 
+    const gallery = document.querySelector('div#gallery');
+
 
     await users.forEach(element => {
-        const gallery = document.querySelector('div#gallery');
+        
         const firstName = element.firstName;
         const lastName = element.lastName;
         const email = element.email;
         const city = element.city;
         const state = element.state;
         const image = element.image;
-        //creating and apending elements elements
-        const card =
-            `<div class="card">
-                <div class="card-img-container">
-                    <img class="card-img" src="${image}" alt="profile picture">
-                </div>
-                <div class="card-info-container">
-                    <h3 id="name" class="card-name cap">${firstName} ${lastName}</h3>
-                    <p class="card-text">${email}</p>
-                    <p class="card-text cap">${city}, ${state}</p>
-                </div>
-            </div>`;
-        console.log(card);
+        //creating and apending elements element
+        let card = document.createElement('div');
+        card.className = 'card'
         gallery.appendChild(card);
-       
-        
+        card.innerHTML= 
+        `<div class="card-img-container">
+            <img class="card-img" src="${image}" alt="profile picture">
+        </div>
+        <div class="card-info-container">
+            <h3 id="name" class="card-name cap">${firstName} ${lastName}</h3>
+            <p class="card-text">${email}</p>
+            <p class="card-text cap">${city}, ${state}</p>
+        </div>`;
     });
 
-    // You can use the commented out markup below as a template
-    // for each of your Gallery items, but you must use JS to 
-    // create and append them to the `gallery` div.
+    gallery.addEventListener('click', () =>{
 
-    // IMPORTANT: Altering the arrangement of the markup and the 
-    // attributes used may break the styles or functionality.
+        
 
-    // <div class="card">
-    //     <div class="card-img-container">
-    //         <img class="card-img" src="https://placehold.it/90x90" alt="profile picture">
-    //     </div>
-    //     <div class="card-info-container">
-    //         <h3 id="name" class="card-name cap">first last</h3>
-    //         <p class="card-text">email</p>
-    //         <p class="card-text cap">city, state</p>
-    //     </div>
-    // </div>
+
+    });
 
 })();
+
