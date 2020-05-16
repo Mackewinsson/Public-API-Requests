@@ -75,7 +75,7 @@ async function fetchApi(url){
   (async function(){
 
     const userNumber = 12;
-    const url = `https://randomuser.me/api/?results=${userNumber}`;
+    const url = `https://randomuser.me/api/?results=${userNumber}&nat=us`;
     const data = await fetchApi(url);
     const results = await data.results;
     console.log(results);
@@ -94,7 +94,7 @@ async function fetchApi(url){
             phone: element.cell,
             street: element.location.street.name,
             streetNumber: element.location.street.number,
-            birthday: element.dob.date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)(.*)/g, '$3/$2/$1')
+            birthday: element.dob.date.replace(/(\d\d\d\d)-(\d\d)-(\d\d)(.*)/g, '$2/$3/$1')
 
         };
         
